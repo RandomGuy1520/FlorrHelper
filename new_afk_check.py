@@ -1,4 +1,5 @@
 import cv2
+import keyboard
 from HumanCursor import *
 import numpy as np
 import sys
@@ -6,7 +7,10 @@ from PIL import Image
 import pyautogui
 import time
 
-grey_colors = [[110, 135, 87], [107, 149, 157], [104, 142, 149], [93, 101, 113], [100, 112, 128], [111, 157, 165], [116, 144, 153], [108, 130, 139], [114, 143, 150], [96, 96, 96]]
+grey_colors = [[110, 135, 87], [107, 149, 157], [104, 142, 149], [93, 101, 113], [100, 112, 128], [111, 157, 165],
+               [116, 144, 153], [108, 130, 139], [114, 143, 150], [96, 96, 96]]
+
+
 def is_grey(px):
     if 130 >= px[2] >= 100 >= px[0] >= 85 and 95 <= px[1] <= 115:
         return True
@@ -15,15 +19,22 @@ def is_grey(px):
             return True
     return False
 
+
 time.sleep(3)
 sys.setrecursionlimit(5000)
-rarities = [[109, 239, 126], [93, 230, 255], [227, 82, 77], [222, 31, 134], [31, 31, 222], [222, 219, 31], [117, 43, 255], [163, 255, 43]]
+rarities = [[109, 239, 126], [93, 230, 255], [227, 82, 77], [222, 31, 134], [31, 31, 222], [222, 219, 31],
+            [117, 43, 255], [163, 255, 43]]
 white = [255, 255, 254]
 jump = 5
 cursor = SystemCursor()
 count = 0
+dfs_cnt = 0
 
 def dfs(x, y):
+    global dfs_cnt
+    dfs_cnt += 1
+    if dfs_cnt > 4000:
+        return
     global count
     if x < 0 or y < 0 or x >= img.shape[0] or y >= img.shape[1]:
         return
@@ -39,17 +50,23 @@ def dfs(x, y):
     for coord in next_coords:
         dfs(coord[0], coord[1])
 
+
 time.sleep(3)
-# round_count = 0
+round_count = 0
 while True:
+    if keyboard.is_pressed('q'):
+        break
     imgObj = pyautogui.screenshot()
     imgArr = cv2.cvtColor(np.array(imgObj), cv2.COLOR_RGB2BGR)
-    # ready = Image.open("ready.png")
-    # box = pyautogui.locateOnScreen(ready, grayscale=False, confidence=0.85)
-    # if box is not None:
-    #     break
-    # round_count = (round_count + 1) % 20
-    # cv2.imwrite("Log/log" + str(round_count) + ".png", imgArr)
+    ready = Image.open("Images/Ready.PNG")
+    try:
+        box = pyautogui.locateOnScreen(ready, grayscale=False, confidence=0.8)
+        if box is not None:
+            break
+    except:
+        pass
+    round_count = (round_count + 1) % 20
+    cv2.imwrite("Log/log" + str(round_count) + ".png", imgArr)
     img = np.zeros((1400, 2200, 3))
     img[:imgArr.shape[0], :imgArr.shape[1]] = imgArr
     cv2.imwrite("new.PNG", img)
@@ -70,6 +87,7 @@ while True:
             if (img[i][j] == white).all():
                 if not vis[i][j]:
                     count = 0
+                    dfs_cnt = 0
                     dfs(i, j)
                     if count > max_cluster:
                         max_cluster = count
@@ -77,6 +95,7 @@ while True:
     if max_cluster <= 15:
         continue
     vis = np.zeros((2000, 2000))
+    dfs_cnt = 0
     dfs(max_coord[0], max_coord[1])
     sum_start, num_start = [0, 0], 0
     for i in range(0, len(img), 10):
@@ -108,6 +127,7 @@ while True:
         recur += 1
         if recur > 100:
             print("Maximum recursive exceeded!")
+            stack = []
             break
         sum_cur, num_cur = [0, 0], 0
         for i in range(-25, 30, jump):
@@ -127,16 +147,18 @@ while True:
                     vis[cur[0] + i][cur[1] + j] = False
         cur = next_cur
         stack.append(next_cur)
+    if not stack:
+        continue
     cursor.move_to([stack[0][1], stack[0][0]])
     img[stack[0][0]][stack[0][1]] = [0, 255, 0]
     pyautogui.mouseDown()
-    duration = 0.6
+    duration = 1
     for i in range(1, len(stack)):
         duration += random.uniform(-0.15, 0.15)
-        if duration < 0.2:
-            duration = 0.2
-        if duration > 1:
-            duration = 1
+        if duration < 0.6:
+            duration = 0.6
+        if duration > 2:
+            duration = 2
         cursor.move_to_short([stack[i][1], stack[i][0]], steady=True, duration=duration)
         img[stack[i][0]][stack[i][1]] = [0, 255, 0]
     pyautogui.mouseUp()
