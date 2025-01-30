@@ -2,10 +2,11 @@ import cv2
 from HumanCursor import *
 import numpy as np
 import sys
+from PIL import Image
 import pyautogui
 import time
 
-grey_colors = [[107, 149, 157], [104, 142, 149], [93, 101, 113], [100, 112, 128], [111, 157, 165], [116, 144, 153], [108, 130, 139], [114, 143, 150], [94, 94, 94]]
+grey_colors = [[110, 135, 87], [107, 149, 157], [104, 142, 149], [93, 101, 113], [100, 112, 128], [111, 157, 165], [116, 144, 153], [108, 130, 139], [114, 143, 150], [96, 96, 96]]
 def is_grey(px):
     if 130 >= px[2] >= 100 >= px[0] >= 85 and 95 <= px[1] <= 115:
         return True
@@ -16,7 +17,7 @@ def is_grey(px):
 
 time.sleep(3)
 sys.setrecursionlimit(5000)
-rarities = [[109, 239, 126], [93, 230, 255], [227, 82, 77], [222, 31, 134], [31, 31, 222], [222, 200, 15], [117, 43, 255], [163, 255, 43]]
+rarities = [[109, 239, 126], [93, 230, 255], [227, 82, 77], [222, 31, 134], [31, 31, 222], [222, 219, 31], [117, 43, 255], [163, 255, 43]]
 white = [255, 255, 254]
 jump = 5
 cursor = SystemCursor()
@@ -39,9 +40,16 @@ def dfs(x, y):
         dfs(coord[0], coord[1])
 
 time.sleep(3)
+# round_count = 0
 while True:
     imgObj = pyautogui.screenshot()
     imgArr = cv2.cvtColor(np.array(imgObj), cv2.COLOR_RGB2BGR)
+    # ready = Image.open("ready.png")
+    # box = pyautogui.locateOnScreen(ready, grayscale=False, confidence=0.85)
+    # if box is not None:
+    #     break
+    # round_count = (round_count + 1) % 20
+    # cv2.imwrite("Log/log" + str(round_count) + ".png", imgArr)
     img = np.zeros((1400, 2200, 3))
     img[:imgArr.shape[0], :imgArr.shape[1]] = imgArr
     cv2.imwrite("new.PNG", img)
@@ -68,7 +76,6 @@ while True:
                         max_coord = (i, j)
     if max_cluster <= 15:
         continue
-        # pass
     vis = np.zeros((2000, 2000))
     dfs(max_coord[0], max_coord[1])
     sum_start, num_start = [0, 0], 0
@@ -123,13 +130,13 @@ while True:
     cursor.move_to([stack[0][1], stack[0][0]])
     img[stack[0][0]][stack[0][1]] = [0, 255, 0]
     pyautogui.mouseDown()
-    duration = 0.5
+    duration = 0.6
     for i in range(1, len(stack)):
-        duration += random.uniform(-0.1, 0.1)
+        duration += random.uniform(-0.15, 0.15)
         if duration < 0.2:
             duration = 0.2
-        if duration > 0.6:
-            duration = 0.6
+        if duration > 1:
+            duration = 1
         cursor.move_to_short([stack[i][1], stack[i][0]], steady=True, duration=duration)
         img[stack[i][0]][stack[i][1]] = [0, 255, 0]
     pyautogui.mouseUp()
