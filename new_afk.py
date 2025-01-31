@@ -74,6 +74,9 @@ while True:
     for i in range(0, 300, jump):
         for j in range(0, 400, jump):
             img[i][j] = [0, 0, 0]
+    for i in range(910, 1070, jump):
+        for j in range(550, 1360, jump):
+            img[i][j] = [0, 0, 0]
     for i in range(0, len(img), jump):
         for j in range(0, len(img[i]), jump):
             pixel = img[i][j]
