@@ -10,4 +10,8 @@ Helper.py is an auto-bubbler. You should choose where you want to go.
 
 Interpreter.py, Player.py is still experimenting.
 
+Interpreter.py aims to recognize mobs, players, eggs, etc.
+
+Player.py aims to automate dynamic farming.
+
 DON'T TELL M2B ABOUT THIS!!!
