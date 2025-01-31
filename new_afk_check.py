@@ -151,14 +151,19 @@ while True:
         continue
     cursor.move_to([stack[0][1], stack[0][0]])
     img[stack[0][0]][stack[0][1]] = [0, 255, 0]
+    if len(stack) >= 2:
+        for i in range(4):
+            lst = stack[-1]
+            lst_lst = stack[-2]
+            stack.append((2 * lst[0] - lst_lst[0], 2 * lst[1] - lst_lst[1]))
     pyautogui.mouseDown()
-    duration = 1
+    duration = 0.25
     for i in range(1, len(stack)):
-        duration += random.uniform(-0.15, 0.15)
-        if duration < 0.6:
-            duration = 0.6
-        if duration > 2:
-            duration = 2
+        duration += random.uniform(-0.1, 0.1)
+        if duration < 0.15:
+            duration = 0.15
+        if duration > 0.4:
+            duration = 0.4
         cursor.move_to_short([stack[i][1], stack[i][0]], steady=True, duration=duration)
         img[stack[i][0]][stack[i][1]] = [0, 255, 0]
     pyautogui.mouseUp()
