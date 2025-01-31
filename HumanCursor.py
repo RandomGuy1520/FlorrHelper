@@ -332,56 +332,7 @@ class SystemCursor:
         pyautogui.PAUSE = duration / len(human_curve.points)
         for pnt in human_curve.points:
             pyautogui.moveTo(pnt)
-            # print(pnt)
         pyautogui.moveTo(point)
-
-    @staticmethod
-    def move_to_short(point: list or tuple, duration: int or float = None, human_curve=None, steady=False):
-        """Moves to certain coordinates of screen"""
-        from_point = pyautogui.position()
-        from_point = (from_point[0] * 10, from_point[1] * 10)
-        point[0] *= 10
-        point[1] *= 10
-        if not human_curve:
-            (
-                offset_boundary_x,
-                offset_boundary_y,
-                knots_count,
-                distortion_mean,
-                distortion_st_dev,
-                distortion_frequency,
-                tween,
-                target_points,
-            ) = generate_random_curve_parameters(
-                pyautogui, from_point, point
-            )
-            if steady:
-                offset_boundary_x, offset_boundary_y = 5, 5
-                distortion_mean, distortion_st_dev, distortion_frequency = 1.1, 1.1, 1
-            human_curve = HumanizeMouseTrajectory(
-                from_point,
-                point,
-                offset_boundary_x=offset_boundary_x,
-                offset_boundary_y=offset_boundary_y,
-                knots_count=knots_count,
-                distortion_mean=distortion_mean,
-                distortion_st_dev=distortion_st_dev,
-                distortion_frequency=distortion_frequency,
-                tween=tween,
-                target_points=target_points,
-            )
-
-        if duration is None:
-            duration = random.uniform(0.5, 2.0)
-        pyautogui.PAUSE = duration / len(human_curve.points)
-        lst = [0, 0]
-        for pnt in human_curve.points:
-            if lst != [pnt[0] // 10, pnt[1] // 10]:
-                pyautogui.moveTo(pnt[0] // 10, pnt[1] // 10)
-                # print(pnt[0] // 10, pnt[1] // 10)
-            lst = [pnt[0] // 10, pnt[1] // 10]
-        pyautogui.moveTo(point[0] // 10, point[1] // 10)
-        # print(point[0] // 10, point[1] // 10)
 
     def click_on(self, point: list or tuple, clicks: int = 1, click_duration: int or float = 0, steady=False):
         """Clicks a specified number of times, on the specified coordinates"""
