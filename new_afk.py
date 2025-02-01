@@ -10,15 +10,15 @@ import time
 grey_colors = [[110, 135, 87], [107, 149, 157], [104, 142, 149], [93, 101, 113], [100, 112, 128], [111, 157, 165],
                [116, 144, 153], [108, 130, 139], [114, 143, 150], [96, 96, 96]]
 
-
 def is_grey(px):
+    if (px == [79, 106, 111]).all() or (px == [84, 117, 123]).all() or (px == [82, 112, 117]).all():
+        return False
     if 130 >= px[2] >= 100 >= px[0] >= 85 and 95 <= px[1] <= 115:
         return True
     for gc in grey_colors:
         if abs(px[0] - gc[0]) + abs(px[1] - gc[1]) + abs(px[2] - gc[2]) <= 30:
             return True
     return False
-
 
 time.sleep(3)
 sys.setrecursionlimit(5000)
@@ -136,7 +136,6 @@ while True:
         for i in range(-25, 30, jump):
             for j in range(-25, 30, jump):
                 if i * i + j * j <= 625 and vis[cur[0] + i][cur[1] + j]:
-                    img[cur[0] + i][cur[1] + j] = [0, 255, 0]
                     sum_cur[0] += i
                     sum_cur[1] += j
                     num_cur += 1
