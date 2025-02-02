@@ -62,7 +62,9 @@ while True:
     try:
         box = pyautogui.locateOnScreen(ready, grayscale=False, confidence=0.8)
         if box is not None:
-            break
+            cursor.move_to([1045, 583])
+            pyautogui.click()
+            continue
     except:
         pass
     round_count = (round_count + 1) % 20
@@ -121,7 +123,7 @@ while True:
                         break
     if num_start == 0:
         continue
-    start = ((sum_start[0] // num_start // 5) * 5, (sum_start[1] // num_start // 5) * 5)
+    start = ((sum_start[0] // num_start // jump) * jump, (sum_start[1] // num_start // jump) * jump)
     print("Detected:", start)
     cur = start
     stack = [cur]
