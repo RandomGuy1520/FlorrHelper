@@ -1,4 +1,4 @@
-A florr.io helper.
+A florr.io DEPRECATED helper. M2B is such a nerd.
 
 afk.py used for "Click Here" V1.0 AFK check automation.
 
